@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from openai import OpenAI
 
+from ChatGPT import ChatGPT
+from utils.keys import API_KEY
+
 app = FastAPI()
-client = OpenAI(api_key="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")
+client = OpenAI(api_key=API_KEY)
+chat_gpt = ChatGPT()
 
 @app.get("/")
 async def root():
@@ -16,13 +20,5 @@ async def say_hello(name: str):
 
 @app.get("/chat/{message}")
 async def chat(message: str):
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system",
-             "content": "Tú te llamarás Pancracio y hablarás como un guia de turista."},
-            {"role": "user", "content": message}
-        ]
-    )
-    return completion.choices[0].message.content
+    return chat_gpt.chat(message)
 
